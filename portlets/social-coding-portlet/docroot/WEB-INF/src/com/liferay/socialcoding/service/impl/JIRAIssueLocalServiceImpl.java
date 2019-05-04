@@ -14,19 +14,19 @@
 
 package com.liferay.socialcoding.service.impl;
 
+import com.liferay.expando.kernel.model.ExpandoValue;
+import com.liferay.expando.kernel.service.ExpandoValueLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.model.User;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.expando.model.ExpandoValue;
-import com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil;
-import com.liferay.portlet.social.model.SocialActivity;
-import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
-import com.liferay.socialcoding.NoSuchJIRAIssueException;
+import com.liferay.social.kernel.model.SocialActivity;
+import com.liferay.social.kernel.service.SocialActivityLocalServiceUtil;
+import com.liferay.socialcoding.exception.NoSuchJIRAIssueException;
 import com.liferay.socialcoding.jira.social.JIRAActivityKeys;
 import com.liferay.socialcoding.jira.util.JIRAUtil;
 import com.liferay.socialcoding.model.JIRAAction;
@@ -96,7 +96,7 @@ public class JIRAIssueLocalServiceImpl extends JIRAIssueLocalServiceBaseImpl {
 		List<JIRAIssue> jiraIssues = jiraIssuePersistence.findByP_AJUI(
 			projectId, assigneeJiraUserId, count - 1, count);
 
-		if (jiraIssues.size() > 0) {
+		if (!jiraIssues.isEmpty()) {
 			return jiraIssues.get(0);
 		}
 		else {
@@ -114,7 +114,7 @@ public class JIRAIssueLocalServiceImpl extends JIRAIssueLocalServiceBaseImpl {
 		List<JIRAIssue> jiraIssues = jiraIssuePersistence.findByP_RJUI(
 			projectId, reporterJiraUserId, count - 1, count);
 
-		if (jiraIssues.size() > 0) {
+		if (!jiraIssues.isEmpty()) {
 			return jiraIssues.get(0);
 		}
 		else {
@@ -138,7 +138,7 @@ public class JIRAIssueLocalServiceImpl extends JIRAIssueLocalServiceBaseImpl {
 		List<JIRAIssue> jiraIssues = jiraIssuePersistence.findByP_AJUI(
 			projectId, assigneeJiraUserId, 0, 1);
 
-		if (jiraIssues.size() > 0) {
+		if (!jiraIssues.isEmpty()) {
 			return jiraIssues.get(0);
 		}
 		else {
@@ -153,7 +153,7 @@ public class JIRAIssueLocalServiceImpl extends JIRAIssueLocalServiceBaseImpl {
 		List<JIRAIssue> jiraIssues = jiraIssuePersistence.findByP_RJUI(
 			projectId, reporterJiraUserId, 0, 1);
 
-		if (jiraIssues.size() > 0) {
+		if (!jiraIssues.isEmpty()) {
 			return jiraIssues.get(0);
 		}
 		else {
@@ -244,29 +244,31 @@ public class JIRAIssueLocalServiceImpl extends JIRAIssueLocalServiceBaseImpl {
 			extraData.put(
 				"jiraChangeGroupId", jiraChangeGroup.getJiraChangeGroupId());
 
-			JSONArray jiraChangeItemsJSON = JSONFactoryUtil.createJSONArray();
+			JSONArray jiraChangeItemsJSONArray =
+				JSONFactoryUtil.createJSONArray();
 
-			extraData.put("jiraChangeItems", jiraChangeItemsJSON);
+			extraData.put("jiraChangeItems", jiraChangeItemsJSONArray);
 
 			List<JIRAChangeItem> jiraChangeItems =
 				jiraChangeItemPersistence.findByJiraChangeGroupId(
 					jiraChangeGroup.getJiraChangeGroupId());
 
 			for (JIRAChangeItem jiraChangeItem : jiraChangeItems) {
-				JSONObject jiraChangeItemJSON =
+				JSONObject jiraChangeItemJSONObject =
 					JSONFactoryUtil.createJSONObject();
 
-				jiraChangeItemJSON.put("field", jiraChangeItem.getField());
-				jiraChangeItemJSON.put(
-					"oldValue", jiraChangeItem.getOldValue());
-				jiraChangeItemJSON.put(
-					"oldString", jiraChangeItem.getOldString());
-				jiraChangeItemJSON.put(
-					"newValue", jiraChangeItem.getNewValue());
-				jiraChangeItemJSON.put(
+				jiraChangeItemJSONObject.put(
+					"field", jiraChangeItem.getField());
+				jiraChangeItemJSONObject.put(
 					"newString", jiraChangeItem.getNewString());
+				jiraChangeItemJSONObject.put(
+					"newValue", jiraChangeItem.getNewValue());
+				jiraChangeItemJSONObject.put(
+					"oldString", jiraChangeItem.getOldString());
+				jiraChangeItemJSONObject.put(
+					"oldValue", jiraChangeItem.getOldValue());
 
-				jiraChangeItemsJSON.put(jiraChangeItemJSON);
+				jiraChangeItemsJSONArray.put(jiraChangeItemJSONObject);
 			}
 
 			SocialActivityLocalServiceUtil.addUniqueActivity(
@@ -300,7 +302,7 @@ public class JIRAIssueLocalServiceImpl extends JIRAIssueLocalServiceBaseImpl {
 			SocialActivityLocalServiceUtil.getActivities(
 				JIRAIssue.class.getName(), 0, 1);
 
-		if (socialActivities.size() > 0) {
+		if (!socialActivities.isEmpty()) {
 			SocialActivity socialActivity = socialActivities.get(0);
 
 			modifiedDate = JIRAUtil.getJIRADate(
@@ -319,7 +321,7 @@ public class JIRAIssueLocalServiceImpl extends JIRAIssueLocalServiceBaseImpl {
 				PortalUtil.getDefaultCompanyId(), User.class.getName(), "SC",
 				"jiraUserId", jiraUserId, 0, 1);
 
-		if (expandoValues.size() == 0) {
+		if (expandoValues.isEmpty()) {
 			return 0;
 		}
 

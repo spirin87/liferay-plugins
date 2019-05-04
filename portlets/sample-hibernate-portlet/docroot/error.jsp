@@ -14,8 +14,8 @@
  */
 --%>
 
-<span class="alert alert-error">
-An unexpected error occurred.
+<span class="alert alert-danger">
+	An unexpected error occurred.
 </span>
 
 Please check that these database settings are correct.

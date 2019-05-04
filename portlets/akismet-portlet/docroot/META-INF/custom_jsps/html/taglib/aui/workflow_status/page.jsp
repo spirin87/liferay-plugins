@@ -16,8 +16,8 @@
 
 <%@ include file="/html/taglib/init.jsp" %>
 
-<%@ page import="com.liferay.portlet.messageboards.model.MBMessage" %>
-<%@ page import="com.liferay.portlet.wiki.model.WikiPage" %>
+<%@ page import="com.liferay.message.boards.kernel.model.MBMessage" %><%@
+page import="com.liferay.portlet.wiki.model.WikiPage" %>
 
 <%
 Object bean = request.getAttribute("aui:workflow-status:bean");
@@ -77,7 +77,7 @@ if (bean instanceof WikiPage) {
 %>
 
 <c:if test="<%= displayMessage %>">
-	<div class="alert alert-error">
+	<div class="alert alert-danger">
 </c:if>
 
 <%= html %>
@@ -88,7 +88,7 @@ if (bean instanceof WikiPage) {
 
 <%!
 private static boolean _isPendingApproval(WikiPage wikiPage) {
-	if ((wikiPage == null) || !Validator.equals(wikiPage.getSummary(), _AKISMET_CONSTANTS_WIKI_PAGE_PENDING_APPROVAL)) {
+	if ((wikiPage == null) || !Objects.equals(wikiPage.getSummary(), _AKISMET_CONSTANTS_WIKI_PAGE_PENDING_APPROVAL)) {
 		return false;
 	}
 
@@ -96,7 +96,7 @@ private static boolean _isPendingApproval(WikiPage wikiPage) {
 }
 
 private static boolean _isSpam(WikiPage wikiPage) {
-	if ((wikiPage == null) || !Validator.equals(wikiPage.getSummary(), _AKISMET_CONSTANTS_WIKI_PAGE_MARKED_AS_SPAM)) {
+	if ((wikiPage == null) || !Objects.equals(wikiPage.getSummary(), _AKISMET_CONSTANTS_WIKI_PAGE_MARKED_AS_SPAM)) {
 		return false;
 	}
 

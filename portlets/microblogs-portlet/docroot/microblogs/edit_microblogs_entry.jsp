@@ -74,7 +74,7 @@ String formName = "fm" + formId;
 
 String formCssClass = "microblogs-entry-form";
 
-boolean comment = GetterUtil.getBoolean((String)request.getAttribute("view_comments.jsp-comment"), false);
+boolean comment = GetterUtil.getBoolean((String)request.getAttribute("view_comments.jsp-comment"));
 
 if (comment) {
 	formCssClass += " reply";
@@ -88,7 +88,7 @@ if (comment) {
 
 	<c:choose>
 		<c:when test="<%= microblogsEntry == null %>">
-			<div class="alert alert-error">
+			<div class="alert alert-danger">
 				<liferay-ui:message key="entry-could-not-be-found" />
 			</div>
 		</c:when>
@@ -214,7 +214,7 @@ if (comment) {
 			return '[@' + MAP_USERS[str] + ']';
 		},
 		userName: function(str, match) {
-			return '<span>' + str + '</span>'
+			return '<span>' + str + '</span>';
 		}
 	};
 
@@ -222,16 +222,21 @@ if (comment) {
 
 	var REGEX_USER_NAME = /@(.*[^\s]+)$/;
 
-	var TPL_SEARCH_RESULTS = '<div class="microblogs-autocomplete">' +
-		'<div class="thumbnail">' +
-			'<img alt="{fullName}" src="{portraitURL}" />' +
-		'</div>' +
-		'<div>' +
-			'<span class="user-name">{fullName}</span><br />' +
-			'<span class="small">{emailAddress}</span><br />' +
-			'<span class="job-title">{jobTitle}</span>' +
-		'</div>' +
-	'</div>';
+	var TPL_SEARCH_RESULTS =
+		'<div class="microblogs-autocomplete">' +
+			'<div class="thumbnail">' +
+				'<img alt="{fullName}" src="{portraitURL}" />' +
+			'</div>' +
+			'<div>' +
+				'<span class="user-name">{fullName}</span>' +
+				'<br />' +
+				'<span class="small">{emailAddress}</span>' +
+				'<br />' +
+				'<span class="job-title">{jobTitle}</span>' +
+			'</div>' +
+		'</div>';
+
+	var autocompleteDiv;
 
 	var form = A.one('#<portlet:namespace /><%= formName %>');
 
@@ -242,9 +247,9 @@ if (comment) {
 			var countdown = form.one('.microblogs-countdown');
 			var submitButton = form.one('.microblogs-post');
 
-			var remaining = (150 - contentInput.val().length);
+			var remaining = 150 - contentInput.val().length;
 
-			var disabled = ((remaining == 150) || (contentInput.get('value') == '') || (remaining < 0));
+			var disabled = remaining == 150 || contentInput.get('value') == '' || remaining < 0;
 
 			countdown.html(remaining);
 
@@ -263,7 +268,7 @@ if (comment) {
 
 			var inputValue = '<%= ((microblogsEntry != null) && (edit)) ? StringUtil.replace(HtmlUtil.escapeJS(microblogsEntry.getContent()), "\'", "\\'") : StringPool.BLANK %>';
 
-			if ((autocomplete.height() < 45) || (highlighterContent.height() < 45)) {
+			if (autocomplete.height() < 45 || highlighterContent.height() < 45) {
 				autocomplete.height(45);
 
 				highlighterContent.height(45);
@@ -347,8 +352,7 @@ if (comment) {
 		};
 
 		var resultFormatter = function(query, results) {
-			return A.Array.map(
-				results,
+			return results.map(
 				function(result) {
 					var userData = result.raw;
 
@@ -412,11 +416,11 @@ if (comment) {
 
 			MAP_USERS[fullName] = screenName;
 
-			autocompleteDiv.hide()
+			autocompleteDiv.hide();
 		};
 
 		var createAutocomplete = function(contentTextarea) {
-			return autocompleteDiv = new A.AutoComplete(
+			autocompleteDiv = new A.AutoComplete(
 				{
 					inputNode: contentTextarea,
 					maxResults: 5,
@@ -435,7 +439,9 @@ if (comment) {
 					source: <%= MicroblogsUtil.getJSONRecipients(user.getUserId(), themeDisplay) %>
 				}
 			).render();
-		}
+
+			return autocompleteDiv;
+		};
 
 		<c:choose>
 			<c:when test="<%= !edit %>">

@@ -69,7 +69,7 @@ taskListURL.setParameter("tabs2", tabs2);
 	emptyResultsMessage="no-tasks-were-found"
 	headerNames="description,due, "
 	iteratorURL="<%= portletURL %>"
-	total= "<%= TasksEntryLocalServiceUtil.getTasksEntriesCount(groupId, userId, 0, assigneeUserId, status, assetTagIds, new long[0]) %>"
+	total="<%= TasksEntryLocalServiceUtil.getTasksEntriesCount(groupId, userId, 0, assigneeUserId, status, assetTagIds, new long[0]) %>"
 >
 	<liferay-ui:search-container-results
 		results="<%= TasksEntryLocalServiceUtil.getTasksEntries(groupId, userId, 0, assigneeUserId, status, assetTagIds, new long[0], searchContainer.getStart(), searchContainer.getEnd()) %>"
@@ -133,6 +133,7 @@ taskListURL.setParameter("tabs2", tabs2);
 					</c:otherwise>
 				</c:choose>
 			</div>
+
 			<div class="result-data">
 				<c:if test="<%= group.isUser() %>">
 
@@ -168,7 +169,7 @@ taskListURL.setParameter("tabs2", tabs2);
 			name="due"
 		>
 			<c:choose>
-				<c:when test="<%= (TasksEntryPermission.contains(permissionChecker, tasksEntry, ActionKeys.UPDATE)) %>">
+				<c:when test="<%= TasksEntryPermission.contains(permissionChecker, tasksEntry, ActionKeys.UPDATE) %>">
 
 					<%
 					int curStatus = tasksEntry.getStatus();
@@ -199,13 +200,13 @@ taskListURL.setParameter("tabs2", tabs2);
 							</div>
 
 							<c:if test="<%= tasksEntry.getDueDate() != null %>">
-								<div class="due-date <%= (DateUtil.compareTo(new Date(), tasksEntry.getDueDate(), true) >= 0) ? "past-due" : StringPool.BLANK %>">
+								<div class="due-date <%= (DateUtil.compareTo(new Date(), tasksEntry.getDueDate()) >= 0) ? "past-due" : StringPool.BLANK %>">
 									<%= dateFormatDateTime.format(tasksEntry.getDueDate()) %>
 								</div>
 							</c:if>
 						</div>
 
-						<div class="progress-picker hide">
+						<div class="hide progress-picker">
 							<div class="new-progress"><!-- --></div>
 							<div class="progress-indicator"></div>
 							<div class="progress-selector">
@@ -249,12 +250,11 @@ taskListURL.setParameter("tabs2", tabs2);
 				<div class="tags-wrapper">
 					<i class="icon-tag"></i>
 
-					<div class="tags hide">
+					<div class="hide tags">
 						<%= ListUtil.toString(assetTags, AssetTag.NAME_ACCESSOR) %>
 					</div>
 				</div>
 			</c:if>
-
 		</liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
 

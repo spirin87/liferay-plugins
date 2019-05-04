@@ -14,24 +14,24 @@
 
 package com.liferay.google.mail.groups.hook.listeners;
 
-import com.liferay.google.mail.groups.util.GoogleDirectoryUtil;
+import com.liferay.google.apps.connector.util.GoogleDirectoryUtil;
 import com.liferay.google.mail.groups.util.GoogleMailGroupsUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.model.BaseModelListener;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserGroup;
 import com.liferay.portal.kernel.process.ProcessCallable;
 import com.liferay.portal.kernel.process.ProcessException;
-import com.liferay.portal.kernel.transaction.TransactionCommitCallbackRegistryUtil;
-import com.liferay.portal.model.BaseModelListener;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.Organization;
-import com.liferay.portal.model.User;
-import com.liferay.portal.model.UserGroup;
-import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.OrganizationLocalServiceUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 
 import java.io.Serializable;
 
@@ -70,7 +70,7 @@ public class UserModelListener extends BaseModelListener<User> {
 
 			};
 
-			TransactionCommitCallbackRegistryUtil.registerCallback(callable);
+			TransactionCommitCallbackUtil.registerCallback(callable);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -102,7 +102,7 @@ public class UserModelListener extends BaseModelListener<User> {
 
 			};
 
-			TransactionCommitCallbackRegistryUtil.registerCallback(callable);
+			TransactionCommitCallbackUtil.registerCallback(callable);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -131,7 +131,7 @@ public class UserModelListener extends BaseModelListener<User> {
 				(Long)associationClassPK);
 		}
 
-		return new ArrayList<Group>();
+		return new ArrayList<>();
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(UserModelListener.class);

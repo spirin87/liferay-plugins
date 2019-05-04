@@ -18,7 +18,7 @@
 
 <portlet:renderURL var="portletURL" windowState="<%= WindowState.MAXIMIZED.toString() %>" />
 
-<aui:form action="<%= portletURL %>" cssClass="stock-options-form" method="post" name="fm" onSubmit="submitForm(this); return false;">
+<aui:form action="<%= portletURL %>" cssClass="stock-options-form" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveForm();" %>'>
 	<c:choose>
 		<c:when test="<%= windowState.equals(WindowState.NORMAL) %>">
 			<table class="lfr-table">
@@ -35,24 +35,24 @@
 								<a href="<portlet:renderURL windowState="<%= WindowState.MAXIMIZED.toString() %>"><portlet:param name="struts_action" value="/stocks/view" /><portlet:param name="symbol" value="<%= stocks.getSymbol() %>" /></portlet:renderURL>" style="font-size: xx-small; font-weight: bold;"><%= stocks.getSymbol() %></a>
 							</td>
 							<td align="right">
-								<%= stocks.isLastTradeAvailable() ? decimalFormat.format(stocks.getLastTrade()) : LanguageUtil.get(request, "not-available") %>
+								<%= decimalFormat.format(stocks.getLastTrade()) %>
 							</td>
 							<td align="right">
 								<c:if test="<%= stocks.getChange() < 0 %>">
-									<span class="alert alert-error">
-										<%= stocks.isChangeAvailable() ? decimalFormat.format(stocks.getChange()) : LanguageUtil.get(request, "not-available") %>
+									<span class="alert alert-danger">
+										<%= decimalFormat.format(stocks.getChange()) %>
 									</span>
 								</c:if>
 
 								<c:if test="<%= stocks.getChange() > 0 %>">
 									<span class="alert alert-success">
-										+<%= stocks.isChangeAvailable() ? decimalFormat.format(stocks.getChange()) : LanguageUtil.get(request, "not-available") %>
+										+<%= decimalFormat.format(stocks.getChange()) %>
 									</span>
 								</c:if>
 
 								<c:if test="<%= stocks.getChange() == 0 %>">
 									<span style="font-size: xx-small;">
-										<%= stocks.isChangeAvailable() ? decimalFormat.format(stocks.getChange()) : LanguageUtil.get(request, "not-available") %>
+										<%= decimalFormat.format(stocks.getChange()) %>
 									</span>
 								</c:if>
 							</td>
@@ -110,7 +110,7 @@
 
 			<aui:input label="" maxlength="10" name="symbol" size="10" type="text" value="<%= symbol %>" />
 
-			<aui:select class="stock-options" label="" name="time" onChange="submitForm(document.<portlet:namespace />fm);" value="<%= time %>">
+			<aui:select class="stock-options" label="" name="time" onChange='<%= renderResponse.getNamespace() + "saveForm();" %>' value="<%= time %>">
 				<aui:option value="1">1 <liferay-ui:message key="day" /></aui:option>
 				<aui:option value="2">2 <liferay-ui:message key="days" /></aui:option>
 				<aui:option value="3">5 <liferay-ui:message key="days" /></aui:option>
@@ -139,61 +139,59 @@
 						<tr>
 							<td align="center">
 								<liferay-ui:message key="last-trade" /><br />
+
 								<strong><%= decimalFormat.format(stocks.getLastTrade()) %></strong>
 							</td>
 							<td align="center">
 								<liferay-ui:message key="change" /><br />
 
-								<c:if test="<%= stocks.isChangeAvailable() && stocks.isPreviousCloseAvailable() %>">
-									<c:if test="<%= stocks.getChange() < 0 %>">
-										<span class="alert alert-error">
-											<strong><%= decimalFormat.format(stocks.getChange()) %> / <%= decimalFormat.format(stocks.getChange() / stocks.getPreviousClose() * 100) %>%</strong>
-										</span>
-									</c:if>
-
-									<c:if test="<%= stocks.getChange() > 0 %>">
-										<span class="alert alert-success">
-											<strong>+<%= decimalFormat.format(stocks.getChange()) %> / <%= decimalFormat.format(stocks.getChange() / stocks.getPreviousClose() * 100) %>%</strong>
-										</span>
-									</c:if>
-
-									<c:if test="<%= stocks.getChange() == 0 %>">
+								<c:if test="<%= stocks.getChange() < 0 %>">
+									<span class="alert alert-danger">
 										<strong><%= decimalFormat.format(stocks.getChange()) %> / <%= decimalFormat.format(stocks.getChange() / stocks.getPreviousClose() * 100) %>%</strong>
-									</c:if>
+									</span>
 								</c:if>
 
-								<c:if test="<%= !stocks.isChangeAvailable() || !stocks.isPreviousCloseAvailable() %>">
-									<strong><liferay-ui:message key="not-available" /></strong>
+								<c:if test="<%= stocks.getChange() > 0 %>">
+									<span class="alert alert-success">
+										<strong>+<%= decimalFormat.format(stocks.getChange()) %> / <%= decimalFormat.format(stocks.getChange() / stocks.getPreviousClose() * 100) %>%</strong>
+									</span>
+								</c:if>
+
+								<c:if test="<%= stocks.getChange() == 0 %>">
+									<strong><%= decimalFormat.format(stocks.getChange()) %> / <%= decimalFormat.format(stocks.getChange() / stocks.getPreviousClose() * 100) %>%</strong>
 								</c:if>
 							</td>
 							<td align="center">
 								<liferay-ui:message key="day-high" /><br />
-								<strong><%= stocks.isDayHighAvailable() ? decimalFormat.format(stocks.getDayHigh()) : LanguageUtil.get(request, "not-available") %></strong>
+
+								<strong><%= decimalFormat.format(stocks.getDayHigh()) %></strong>
 							</td>
 							<td align="center">
 								<liferay-ui:message key="day-low" /><br />
-								<strong><%= stocks.isDayLowAvailable() ? decimalFormat.format(stocks.getDayLow()) : LanguageUtil.get(request, "not-available") %></strong>
+
+								<strong><%= decimalFormat.format(stocks.getDayLow()) %></strong>
 							</td>
 							<td align="center">
 								<liferay-ui:message key="open" /><br />
-								<strong><%= stocks.isOpenAvailable() ? decimalFormat.format(stocks.getOpen()) : LanguageUtil.get(request, "not-available") %></strong>
+
+								<strong><%= decimalFormat.format(stocks.getOpen()) %></strong>
 							</td>
 							<td align="center">
 								<liferay-ui:message key="previous-close" /><br />
-								<strong><%= stocks.isPreviousCloseAvailable() ? decimalFormat.format(stocks.getPreviousClose()) : LanguageUtil.get(request, "not-available") %></strong>
+
+								<strong><%= decimalFormat.format(stocks.getPreviousClose()) %></strong>
 							</td>
 							<td align="center">
 								<liferay-ui:message key="volume" /><br />
-								<strong><%= stocks.isVolumeAvailable() ? numberFormat.format(stocks.getVolume()) : LanguageUtil.get(request, "not-available") %></strong>
+
+								<strong><%= numberFormat.format(stocks.getVolume()) %></strong>
 							</td>
 						</tr>
 					</table>
 
 					<br />
 
-					<div>
-						<img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="chart" />" src="<%= HttpUtil.getProtocol(request) %>://bigcharts.marketwatch.com/kaavio.Webhost/charts/big.chart?symb=<%= symbol %>&freq=<%= freq %>&time=<%= time %>" />
-					</div>
+					<img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="chart" />" src="<%= HttpUtil.getProtocol(request) %>://bigcharts.marketwatch.com/kaavio.Webhost/charts/big.chart?symb=<%= symbol %>&freq=<%= freq %>&time=<%= time %>" />
 				</c:when>
 				<c:otherwise>
 					<%= LanguageUtil.format(request, "no-information-was-found-associated-with-the-symbol-x", symbol, false) %>
@@ -202,6 +200,12 @@
 		</c:otherwise>
 	</c:choose>
 </aui:form>
+
+<aui:script>
+	function <portlet:namespace />saveForm() {
+		submitForm(document.<portlet:namespace />fm);
+	}
+</aui:script>
 
 <c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
 	<aui:script>

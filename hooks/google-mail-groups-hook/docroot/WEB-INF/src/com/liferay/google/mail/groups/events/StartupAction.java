@@ -14,24 +14,24 @@
 
 package com.liferay.google.mail.groups.events;
 
+import com.liferay.expando.kernel.model.ExpandoColumnConstants;
+import com.liferay.expando.kernel.model.ExpandoTable;
+import com.liferay.expando.kernel.model.ExpandoTableConstants;
+import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
+import com.liferay.expando.kernel.service.ExpandoTableLocalServiceUtil;
 import com.liferay.google.mail.groups.util.GoogleMailGroupsUtil;
 import com.liferay.google.mail.groups.util.PortletPropsValues;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.SimpleAction;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.RoleConstants;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.Role;
-import com.liferay.portal.model.RoleConstants;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.RoleLocalServiceUtil;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.expando.model.ExpandoColumnConstants;
-import com.liferay.portlet.expando.model.ExpandoTable;
-import com.liferay.portlet.expando.model.ExpandoTableConstants;
-import com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil;
-import com.liferay.portlet.expando.service.ExpandoTableLocalServiceUtil;
 
 /**
  * @author Matthew Kong
@@ -48,8 +48,8 @@ public class StartupAction extends SimpleAction {
 				for (String id : ids) {
 					long companyId = Long.valueOf(id);
 
-					setupExpando(companyId);
-					setupRole(companyId);
+					setUpExpando(companyId);
+					setUpRole(companyId);
 				}
 			}
 
@@ -64,7 +64,7 @@ public class StartupAction extends SimpleAction {
 		}
 	}
 
-	protected void setupExpando(long companyId) throws Exception {
+	protected void setUpExpando(long companyId) throws Exception {
 		ExpandoTable expandoTable = ExpandoTableLocalServiceUtil.fetchTable(
 			companyId, PortalUtil.getClassNameId(Group.class.getName()),
 			ExpandoTableConstants.DEFAULT_TABLE_NAME);
@@ -84,7 +84,7 @@ public class StartupAction extends SimpleAction {
 		}
 	}
 
-	protected void setupRole(long companyId) throws Exception {
+	protected void setUpRole(long companyId) throws Exception {
 		Role role = RoleLocalServiceUtil.fetchRole(
 			companyId, PortletPropsValues.EMAIL_LARGE_GROUP_ROLE);
 

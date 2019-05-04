@@ -22,11 +22,10 @@ import java.util.Map;
 /**
  * @author Douglas Wong
  */
-
 public class PayPalClassicUtil {
 
 	protected static AdaptivePaymentsService getAdaptivePaymentsService() {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 
 		map.put("acct1.AppId", PortletPropsValues.PAYPAL_APP_ID);
 		map.put("acct1.Password", PortletPropsValues.PAYPAL_PASSWORD);

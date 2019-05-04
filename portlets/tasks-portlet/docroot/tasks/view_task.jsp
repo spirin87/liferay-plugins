@@ -27,7 +27,7 @@ TasksEntry tasksEntry = TasksEntryLocalServiceUtil.fetchTasksEntry(tasksEntryId)
 
 <c:choose>
 	<c:when test="<%= tasksEntry == null %>">
-		<span class="alert alert-error"><liferay-ui:message key="task-could-not-be-found" /></span>
+		<span class="alert alert-danger"><liferay-ui:message key="task-could-not-be-found" /></span>
 	</c:when>
 	<c:otherwise>
 
@@ -89,7 +89,7 @@ TasksEntry tasksEntry = TasksEntryLocalServiceUtil.fetchTasksEntry(tasksEntryId)
 				/>
 			</div>
 
-			<div class="task-data last">
+			<div class="last task-data">
 				<liferay-ui:icon
 					iconCssClass="icon-calendar"
 					label="<%= true %>"
@@ -98,63 +98,63 @@ TasksEntry tasksEntry = TasksEntryLocalServiceUtil.fetchTasksEntry(tasksEntryId)
 			</div>
 		</div>
 
-		<table class="task-data-table lfr-table">
-		<tr>
-			<td class="lfr-label">
-				<liferay-ui:message key="status" />
-			</td>
-			<td>
-				<div class="task-data status">
-					<liferay-ui:message key="<%= tasksEntry.getStatusLabel() %>" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="lfr-label">
-				<liferay-ui:message key="priority" />
-			</td>
-			<td>
-				<div class="task-data <%= tasksEntry.getPriorityLabel() %>">
-					<i class="icon-circle"></i>
-
-					<liferay-ui:message key="<%= tasksEntry.getPriorityLabel() %>" />
-				</div>
-			</td>
-		</tr>
-
-		<c:if test="<%= tasksEntry.getDueDate() != null %>">
+		<table class="lfr-table task-data-table">
 			<tr>
 				<td class="lfr-label">
-					<liferay-ui:message key="due-date" />
+					<liferay-ui:message key="status" />
 				</td>
 				<td>
-					<div class="task-data due-date">
-						<liferay-ui:icon
-							iconCssClass="icon-calendar"
-							label="<%= true %>"
-							message="<%= dateFormatDateTime.format(tasksEntry.getDueDate()) %>"
-						/>
+					<div class="status task-data">
+						<liferay-ui:message key="<%= tasksEntry.getStatusLabel() %>" />
 					</div>
 				</td>
 			</tr>
-		</c:if>
+			<tr>
+				<td class="lfr-label">
+					<liferay-ui:message key="priority" />
+				</td>
+				<td>
+					<div class="task-data <%= tasksEntry.getPriorityLabel() %>">
+						<i class="icon-circle"></i>
 
-		<tr>
-			<td colspan="2">
-				<br />
-			</td>
-		</tr>
-		<tr>
-			<td class="lfr-label">
-				<liferay-ui:message key="tags" />
-			</td>
-			<td>
-				<liferay-ui:asset-tags-summary
-					className="<%= TasksEntry.class.getName() %>"
-					classPK="<%= tasksEntry.getTasksEntryId() %>"
-				/>
-			</td>
-		</tr>
+						<liferay-ui:message key="<%= tasksEntry.getPriorityLabel() %>" />
+					</div>
+				</td>
+			</tr>
+
+			<c:if test="<%= tasksEntry.getDueDate() != null %>">
+				<tr>
+					<td class="lfr-label">
+						<liferay-ui:message key="due-date" />
+					</td>
+					<td>
+						<div class="due-date task-data">
+							<liferay-ui:icon
+								iconCssClass="icon-calendar"
+								label="<%= true %>"
+								message="<%= dateFormatDateTime.format(tasksEntry.getDueDate()) %>"
+							/>
+						</div>
+					</td>
+				</tr>
+			</c:if>
+
+			<tr>
+				<td colspan="2">
+					<br />
+				</td>
+			</tr>
+			<tr>
+				<td class="lfr-label">
+					<liferay-ui:message key="tags" />
+				</td>
+				<td>
+					<liferay-ui:asset-tags-summary
+						className="<%= TasksEntry.class.getName() %>"
+						classPK="<%= tasksEntry.getTasksEntryId() %>"
+					/>
+				</td>
+			</tr>
 		</table>
 
 		<aui:button-row>

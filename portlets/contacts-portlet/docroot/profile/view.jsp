@@ -32,13 +32,13 @@ Group group = themeDisplay.getScopeGroup();
 		request.setAttribute(WebKeys.CONTACTS_USER, user2);
 		%>
 
-		<aui:layout cssClass="contacts-container">
+		<div class="contacts-container">
 			<liferay-util:include page="/contacts_center/view_user.jsp" servletContext="<%= application %>" />
-		</aui:layout>
+		</div>
 	</c:when>
 	<c:otherwise>
 		<div class="lfr-message-info">
-			<liferay-ui:message key="this-application-will-only-function-when-placed-on-a-user-page" />
+			<liferay-ui:message key="this-application-only-functions-when-placed-on-a-user-page" />
 		</div>
 	</c:otherwise>
 </c:choose>

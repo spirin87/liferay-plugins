@@ -45,25 +45,21 @@ public class WCUtil {
 
 	public static String translate(String text) {
 		return StringUtil.replace(
-			text,
-			new String[] {
-				" doth ", " hath "
-			},
-			new String[] {
-				" does ", " has "
-			}
-		);
+			text, new String[] {" doth ", " hath "},
+			new String[] {" does ", " has "});
 	}
 
 	private WCUtil() {
 		Document document = null;
 
 		try {
-			ClassLoader classLoader = getClass().getClassLoader();
+			Class<?> clazz = getClass();
+
+			ClassLoader classLoader = clazz.getClassLoader();
 
 			URL url = classLoader.getResource(
-				"com/liferay/westminstercatechism/dependencies/" +
-					"westminster_catechmism.xml");
+				"com/liferay/westminstercatechism/dependencies" +
+					"/westminster_catechmism.xml");
 
 			document = SAXReaderUtil.read(url);
 		}
@@ -71,7 +67,7 @@ public class WCUtil {
 			_log.error(de, de);
 		}
 
-		_shorter = new ArrayList<WCEntry>();
+		_shorter = new ArrayList<>();
 
 		Element rootElement = document.getRootElement();
 
@@ -80,7 +76,7 @@ public class WCUtil {
 		List<Element> entryElements = shorterElement.elements("entry");
 
 		for (Element entryElement : entryElements) {
-			List<String[]> proofs = new ArrayList<String[]>();
+			List<String[]> proofs = new ArrayList<>();
 
 			Element proofsElement = entryElement.element("proofs");
 
@@ -102,14 +98,14 @@ public class WCUtil {
 
 		_shorter = Collections.unmodifiableList(_shorter);
 
-		_larger = new ArrayList<WCEntry>();
+		_larger = new ArrayList<>();
 
 		Element largerElement = rootElement.element("larger");
 
 		entryElements = largerElement.elements("entry");
 
 		for (Element entry : entryElements) {
-			List<String[]> proofs = new ArrayList<String[]>();
+			List<String[]> proofs = new ArrayList<>();
 
 			Element proofsElement = entry.element("proofs");
 

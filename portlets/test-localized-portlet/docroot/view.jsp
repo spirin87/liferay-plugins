@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-ResourceBundle resourceBundle = portletConfig.getResourceBundle(locale);
+ResourceBundle portletConfigResourceBundle = portletConfig.getResourceBundle(locale);
 %>
 
 Test only in
@@ -51,6 +51,7 @@ Test only in
 			<th></th>
 		</tr>
 	</thead>
+
 	<tbody>
 
 		<%
@@ -65,6 +66,7 @@ Test only in
 				"playing-basketball-is-fun",
 				"Veuillez prendre une boisson fra\u00eeche.",
 				"this-is-an-unlocalized-hook-message",
+				"this-is-another-unlocalized-hook-message",
 				"This is an unlocalized portlet message.",
 				"post",
 				"post[adjective]",
@@ -82,6 +84,7 @@ Test only in
 				"Jouer au basket-ball est amusement.",
 				"Veuillez prendre une boisson fra\u00eeche.",
 				"This is an unlocalized hook message.",
+				"This is another unlocalized hook message.",
 				"This is an unlocalized portlet message.",
 				"Envoyer",
 				"Envoyer",
@@ -100,6 +103,7 @@ Test only in
 				"playing-basketball-is-fun",
 				"Tome por favor una bebida fresca.",
 				"this-is-an-unlocalized-hook-message",
+				"this-is-another-unlocalized-hook-message",
 				"This is an unlocalized portlet message.",
 				"post",
 				"post[adjective]",
@@ -117,6 +121,7 @@ Test only in
 				"Jugar a baloncesto es diversi\u00f3n.",
 				"Tome por favor una bebida fresca.",
 				"This is an unlocalized hook message.",
+				"This is another unlocalized hook message.",
 				"This is an unlocalized portlet message.",
 				"Mensaje",
 				"Mensaje",
@@ -135,6 +140,7 @@ Test only in
 				"playing-basketball-is-fun",
 				"Please take a cool drink.",
 				"this-is-an-unlocalized-hook-message",
+				"this-is-another-unlocalized-hook-message",
 				"This is an unlocalized portlet message.",
 				"post",
 				"post[adjective]",
@@ -152,6 +158,7 @@ Test only in
 				"Playing basketball is fun.",
 				"Please take a cool drink.",
 				"This is an unlocalized hook message.",
+				"This is another unlocalized hook message.",
 				"This is an unlocalized portlet message.",
 				"\u53d1\u5e03",
 				"\u53d1\u5e03",
@@ -170,6 +177,7 @@ Test only in
 				"playing-basketball-is-fun",
 				"Please take a cool drink.",
 				"this-is-an-unlocalized-hook-message",
+				"this-is-another-unlocalized-hook-message",
 				"This is an unlocalized portlet message.",
 				"post",
 				"post[adjective]",
@@ -187,6 +195,7 @@ Test only in
 				"Playing basketball is fun.",
 				"Please take a cool drink.",
 				"This is an unlocalized hook message.",
+				"This is another unlocalized hook message.",
 				"This is an unlocalized portlet message.",
 				"Post",
 				"Post",
@@ -199,12 +208,13 @@ Test only in
 			};
 		}
 
-		String[][] tests = new String[][] {
+		String[][] tests = {
 			new String[] {"Override a portal language entry from a hook.", "first-name"},
 			new String[] {"Override a portal language entry from a portlet.", "welcome"},
 			new String[] {"Add a new portlet language entry from a hook.", "playing-basketball-is-fun"},
 			new String[] {"Add a new portlet language entry from a portlet.", "please-take-a-cool-drink"},
 			new String[] {"Add a new unlocalized language entry from a hook.", "this-is-an-unlocalized-hook-message"},
+			new String[] {"Add a new unlocalized language entry from a second property file of a hook", "this-is-another-unlocalized-hook-message"},
 			new String[] {"Add a new unlocalized language entry from a portlet.", "this-is-an-unlocalized-portlet-message"},
 			new String[] {"Override the default modifier for a portal language entry from a hook.", "post"},
 			new String[] {"Override the adjective modifier for a portal language entry from a hook.", "post[adjective]"},
@@ -236,7 +246,7 @@ Test only in
 					String resourceBundleActualValue = key;
 
 					try {
-						resourceBundleActualValue = resourceBundle.getString(key);
+						resourceBundleActualValue = portletConfigResourceBundle.getString(key);
 					}
 					catch (Exception e) {
 					}

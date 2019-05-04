@@ -34,13 +34,14 @@ public class EventsWebCacheItem implements WebCacheItem {
 
 	@Override
 	public Object convert(String key) throws WebCacheException {
-		List<Event> events = new ArrayList<Event>();
+		List<Event> events = new ArrayList<>();
 
 		try {
 			String text = HttpUtil.URLtoString(
 				"http://www.studylight.org/his/tich");
 
 			int x = text.indexOf("<div class=\"border_bottom_medium\"");
+
 			int y = text.indexOf("<p class=\"small\">", x);
 
 			text = HtmlUtil.stripHtml(text.substring(x, y));

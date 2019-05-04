@@ -20,12 +20,12 @@ import com.liferay.chat.util.PortletPropsValues;
 import com.liferay.chat.util.comparator.BuddyComparator;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.ContactConstants;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.model.ContactConstants;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.UserLocalServiceUtil;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -107,7 +107,7 @@ public class JabberImpl implements Jabber {
 				return buddies;
 			}
 
-			List<Object[]> jabberBuddies = new ArrayList<Object[]>();
+			List<Object[]> jabberBuddies = new ArrayList<>();
 
 			jabberBuddies.addAll(buddies);
 
@@ -238,8 +238,8 @@ public class JabberImpl implements Jabber {
 			if (connection == null) {
 				if (_log.isWarnEnabled()) {
 					_log.warn(
-						"User " + fromUserId + " is not connected to Jabber" +
-							" and cannot send messages");
+						"User " + fromUserId + " is not connected to Jabber " +
+							"and cannot send messages");
 				}
 
 				return;
@@ -428,7 +428,7 @@ public class JabberImpl implements Jabber {
 
 		User user = UserLocalServiceUtil.getUserById(userId);
 
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 
 		attributes.put("email", user.getEmailAddress());
 		attributes.put("first", user.getFirstName());
@@ -479,8 +479,7 @@ public class JabberImpl implements Jabber {
 	private static Log _log = LogFactoryUtil.getLog(JabberImpl.class);
 
 	private ConnectionConfiguration _connectionConfiguration;
-	private Map<Long, Connection> _connections =
-		new HashMap<Long, Connection>();
-	private Set<Long> _onlineUserIds = new HashSet<Long>();
+	private Map<Long, Connection> _connections = new HashMap<>();
+	private Set<Long> _onlineUserIds = new HashSet<>();
 
 }

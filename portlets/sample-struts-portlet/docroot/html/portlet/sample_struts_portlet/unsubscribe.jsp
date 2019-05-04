@@ -21,45 +21,43 @@
 <bean:define id="emailAddress" name="unsubscribeForm" property="emailAddress" type="java.lang.String" />
 
 <logic:messagesPresent>
-	<span class="alert alert-error">
-	<html:errors />
+	<span class="alert alert-danger">
+		<html:errors />
 	</span>
 </logic:messagesPresent>
 
 <html:form action="/sample_struts_portlet/unsubscribe/action" focus="firstName" method="post">
+	<table border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td>
+				First Name
+			</td>
+			<td style="padding-left: 10px;"></td>
+			<td>
+				<html:text name="unsubscribeForm" property="firstName" size="23" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Last Name
+			</td>
+			<td style="padding-left: 10px;"></td>
+			<td>
+				<html:text name="unsubscribeForm" property="lastName" size="23" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Email Address
+			</td>
+			<td style="padding-left: 10px;"></td>
+			<td>
+				<html:text name="unsubscribeForm" property="emailAddress" size="23" />
+			</td>
+		</tr>
+	</table>
 
-<table border="0" cellpadding="0" cellspacing="0">
-<tr>
-	<td>
-		First Name
-	</td>
-	<td style="padding-left: 10px;"></td>
-	<td>
-		<html:text name="unsubscribeForm" property="firstName" size="23" />
-	</td>
-</tr>
-<tr>
-	<td>
-		Last Name
-	</td>
-	<td style="padding-left: 10px;"></td>
-	<td>
-		<html:text name="unsubscribeForm" property="lastName" size="23" />
-	</td>
-</tr>
-<tr>
-	<td>
-		Email Address
-	</td>
-	<td style="padding-left: 10px;"></td>
-	<td>
-		<html:text name="unsubscribeForm" property="emailAddress" size="23" />
-	</td>
-</tr>
-</table>
+	<br />
 
-<br />
-
-<html:submit>Unsubscribe</html:submit>
-
+	<html:submit>Unsubscribe</html:submit>
 </html:form>

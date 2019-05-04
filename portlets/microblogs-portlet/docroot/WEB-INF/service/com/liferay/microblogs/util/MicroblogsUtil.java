@@ -20,30 +20,30 @@ package com.liferay.microblogs.util;
 import com.liferay.microblogs.model.MicroblogsEntry;
 import com.liferay.microblogs.model.MicroblogsEntryConstants;
 import com.liferay.microblogs.service.MicroblogsEntryLocalServiceUtil;
-import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Subscription;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.notifications.UserNotificationManagerUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.SubscriptionLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.Subscription;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.SubscriptionLocalServiceUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.comparator.UserFirstNameComparator;
-import com.liferay.portlet.PortletURLFactoryUtil;
-import com.liferay.portlet.social.model.SocialRelationConstants;
+import com.liferay.portal.kernel.util.comparator.UserFirstNameComparator;
+import com.liferay.social.kernel.model.SocialRelationConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ import javax.portlet.WindowStateException;
 public class MicroblogsUtil {
 
 	public static List<String> getHashtags(String content) {
-		List<String> hashtags = new ArrayList<String>();
+		List<String> hashtags = new ArrayList<>();
 
 		Matcher matcher = _hashtagPattern.matcher(content);
 
@@ -136,21 +136,20 @@ public class MicroblogsUtil {
 			}
 			else if (hasReplied(rootMicroblogsEntryId, userId) &&
 					 UserNotificationManagerUtil.isDeliver(
-						userId, PortletKeys.MICROBLOGS, 0,
-						MicroblogsEntryConstants.
-							NOTIFICATION_TYPE_REPLY_TO_REPLIED,
-						deliveryType)) {
+						 userId, PortletKeys.MICROBLOGS, 0,
+						 MicroblogsEntryConstants.
+							 NOTIFICATION_TYPE_REPLY_TO_REPLIED,
+						 deliveryType)) {
 
 				return MicroblogsEntryConstants.
 					NOTIFICATION_TYPE_REPLY_TO_REPLIED;
 			}
-			else if (MicroblogsUtil.isTaggedUser(
-						rootMicroblogsEntryId, true, userId) &&
+			else if (isTaggedUser(rootMicroblogsEntryId, true, userId) &&
 					 UserNotificationManagerUtil.isDeliver(
-						userId, PortletKeys.MICROBLOGS, 0,
-						MicroblogsEntryConstants.
-							NOTIFICATION_TYPE_REPLY_TO_TAGGED,
-						deliveryType)) {
+						 userId, PortletKeys.MICROBLOGS, 0,
+						 MicroblogsEntryConstants.
+							 NOTIFICATION_TYPE_REPLY_TO_TAGGED,
+						 deliveryType)) {
 
 				return MicroblogsEntryConstants.
 					NOTIFICATION_TYPE_REPLY_TO_TAGGED;
@@ -200,7 +199,7 @@ public class MicroblogsUtil {
 	}
 
 	public static List<String> getScreenNames(String content) {
-		List<String> screenNames = new ArrayList<String>();
+		List<String> screenNames = new ArrayList<>();
 
 		Matcher matcher = _userTagPattern.matcher(content);
 
@@ -219,7 +218,7 @@ public class MicroblogsUtil {
 	public static List<Long> getSubscriberUserIds(
 		MicroblogsEntry microblogsEntry) {
 
-		List<Long> receiverUserIds = new ArrayList<Long>();
+		List<Long> receiverUserIds = new ArrayList<>();
 
 		List<Subscription> subscriptions =
 			SubscriptionLocalServiceUtil.getSubscriptions(
@@ -240,8 +239,7 @@ public class MicroblogsUtil {
 	public static boolean hasReplied(long parentMicroblogsEntryId, long userId)
 		throws PortalException {
 
-		List<MicroblogsEntry> microblogsEntries =
-			new ArrayList<MicroblogsEntry>();
+		List<MicroblogsEntry> microblogsEntries = new ArrayList<>();
 
 		microblogsEntries.addAll(
 			MicroblogsEntryLocalServiceUtil.
@@ -281,8 +279,7 @@ public class MicroblogsUtil {
 
 		long rootMicroblogsEntryId = getRootMicroblogsEntryId(microblogsEntry);
 
-		List<MicroblogsEntry> microblogsEntries =
-			new ArrayList<MicroblogsEntry>();
+		List<MicroblogsEntry> microblogsEntries = new ArrayList<>();
 
 		microblogsEntries.addAll(
 			MicroblogsEntryLocalServiceUtil.
